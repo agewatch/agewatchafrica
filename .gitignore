@@ -1,0 +1,6 @@
+﻿# Local environment variables
+node_modules/
+/vendor/
+.env
+.env.local
+.DS_Store
