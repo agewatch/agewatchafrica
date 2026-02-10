@@ -1,4 +1,4 @@
-﻿# AgeWatchAfrica
+# AgeWatchAfrica
 
 Multi-page React static frontend + Laravel API + MySQL.
 
