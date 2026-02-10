@@ -1,9 +1,79 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import GlassCard from "../components/GlassCard.jsx";
-import { Heart, Users, Sparkles } from "lucide-react";
+import { Heart, Users, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import ImageWithFallback from "../components/figma/ImageWithFallback.jsx";
+import { fetchPublicTrips } from "../services/trips.js";
 
 export default function Home() {
+  const [upcomingTrips, setUpcomingTrips] = useState([]);
+  const [tripsError, setTripsError] = useState("");
+  const [tripsLoading, setTripsLoading] = useState(true);
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadUpcomingTrips = async () => {
+      setTripsLoading(true);
+      setTripsError("");
+      try {
+        const data = await fetchPublicTrips({ scope: "upcoming", limit: 3 });
+        if (!mounted) {
+          return;
+        }
+        setUpcomingTrips(data?.data || []);
+      } catch (err) {
+        if (!mounted) {
+          return;
+        }
+        setTripsError(err.message || "Unable to load upcoming trips");
+      } finally {
+        if (mounted) {
+          setTripsLoading(false);
+        }
+      }
+    };
+
+    loadUpcomingTrips();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const getTripImages = (trip) => {
+    const media = Array.isArray(trip.media)
+      ? trip.media.map((item) => item.image_url).filter(Boolean)
+      : [];
+    const cover = trip.image_url ? [trip.image_url] : [];
+    const merged = [...cover, ...media.filter((url) => !cover.includes(url))];
+    return merged.length > 0 ? merged : [];
+  };
+
+  const formatTripDate = (value) => {
+    if (!value) {
+      return "";
+    }
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return String(value).split(" ")[0];
+    }
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
+  };
+
+  const scrollCarousel = (direction) => {
+    if (!carouselRef.current) {
+      return;
+    }
+    carouselRef.current.scrollBy({
+      left: direction * carouselRef.current.clientWidth,
+      behavior: "smooth"
+    });
+  };
+
   return (
     <div className="animate-fade-in">
       <section className="relative min-h-[600px] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16">
@@ -87,6 +157,103 @@ export default function Home() {
               </p>
             </div>
           </GlassCard>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        {tripsError && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-700 mb-6">
+            {tripsError}
+          </div>
+        )}
+
+        <div className="relative">
+          <div className="absolute -left-3 top-1/2 -translate-y-1/2 hidden lg:flex">
+            <button
+              type="button"
+              onClick={() => scrollCarousel(-1)}
+              className="h-10 w-10 rounded-full bg-white shadow-lg border border-amber-200 text-amber-800 flex items-center justify-center hover:bg-amber-50"
+              aria-label="Scroll previous"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="absolute -right-3 top-1/2 -translate-y-1/2 hidden lg:flex">
+            <button
+              type="button"
+              onClick={() => scrollCarousel(1)}
+              className="h-10 w-10 rounded-full bg-white shadow-lg border border-amber-200 text-amber-800 flex items-center justify-center hover:bg-amber-50"
+              aria-label="Scroll next"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          {tripsLoading ? (
+            <p className="text-amber-800">Loading upcoming trips...</p>
+          ) : upcomingTrips.length === 0 ? (
+            <p className="text-amber-800">No upcoming trips yet.</p>
+          ) : (
+            <div
+              ref={carouselRef}
+              className="flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory"
+            >
+              {upcomingTrips.map((trip) => {
+                const images = getTripImages(trip);
+                const cover = images[0];
+
+                return (
+                  <div
+                    key={trip.id}
+                    className="min-w-[280px] sm:min-w-[340px] lg:min-w-[360px] snap-start"
+                  >
+                    <GlassCard hover={false} className="p-0 overflow-hidden">
+                      {cover && (
+                        <div className="h-48 w-full overflow-hidden">
+                          <img
+                            src={cover}
+                            alt={trip.title}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="p-6 space-y-3">
+                        <div>
+                          <h3 className="text-xl font-bold text-amber-900">
+                            {trip.title}
+                          </h3>
+                          <p className="text-amber-800">
+                            {trip.destination_city}, {trip.destination_country}
+                          </p>
+                          <p className="text-sm text-amber-700">
+                            {formatTripDate(trip.start_date)} to{" "}
+                            {formatTripDate(trip.end_date)}
+                          </p>
+                        </div>
+                        <p className="text-sm text-amber-800 line-clamp-3">
+                          {trip.description}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-xs text-amber-700">Starting at</p>
+                            <p className="text-lg font-bold text-amber-900">
+                              USD {trip.price}
+                            </p>
+                          </div>
+                          <Link
+                            to="/trips"
+                            className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold hover:from-amber-600 hover:to-orange-600"
+                          >
+                            Book Now
+                          </Link>
+                        </div>
+                      </div>
+                    </GlassCard>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
     </div>

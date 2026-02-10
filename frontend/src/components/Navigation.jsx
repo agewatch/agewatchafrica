@@ -1,10 +1,12 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { getStoredUser, isAuthenticated, logout } from "../services/auth.js";
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
 
@@ -13,8 +15,15 @@ export default function Navigation() {
     { path: "/about", label: "About" },
     { path: "/services", label: "Services" },
     { path: "/destinations", label: "Destinations" },
-    { path: "/consult", label: "Consult" }
+    { path: "/consult", label: "Consult" },
+    { path: "/community-gallery", label: "Community Gallery" }
   ];
+  const user = getStoredUser();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/30 border-b border-white/20 shadow-lg">
@@ -43,12 +52,35 @@ export default function Navigation() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              to="/login"
-              className="ml-4 px-6 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
-            >
-              Client Login
-            </Link>
+            {isAuthenticated() ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="ml-4 px-6 py-2.5 rounded-lg bg-white/40 text-amber-900 font-semibold hover:bg-white/60 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  Dashboard
+                </Link>
+                {user?.role === "admin" ? (
+                  <span className="ml-2 px-3 py-2 text-xs font-semibold uppercase tracking-wide rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                    Admin
+                  </span>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="ml-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="ml-4 px-6 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+              >
+                Client Login
+              </Link>
+            )}
           </div>
 
           <button
@@ -76,13 +108,40 @@ export default function Navigation() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              to="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block px-4 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold text-center text-lg"
-            >
-              Client Login
-            </Link>
+            {isAuthenticated() ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-3 rounded-lg bg-white/40 text-amber-900 font-semibold text-center text-lg"
+                >
+                  Dashboard
+                </Link>
+                {user?.role === "admin" ? (
+                  <div className="px-4 py-2 text-center text-xs font-semibold uppercase tracking-wide rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                    Admin
+                  </div>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold text-center text-lg"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold text-center text-lg"
+              >
+                Client Login
+              </Link>
+            )}
           </div>
         )}
       </div>
