@@ -12,11 +12,10 @@ export default function Navigation() {
 
   const navLinks = [
     { path: "/", label: "Home" },
-    { path: "/about", label: "About" },
     { path: "/services", label: "Services" },
     { path: "/destinations", label: "Destinations" },
-    { path: "/consult", label: "Consult" },
-    { path: "/community-gallery", label: "Community Gallery" }
+    { path: "/community-gallery", label: "Gallery" },
+    { path: "/consult", label: "Contact" }
   ];
   const user = getStoredUser();
 
