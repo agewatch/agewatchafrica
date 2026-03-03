@@ -19,6 +19,21 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/public/trips', [UserTripController::class, 'publicIndex']);
 Route::get('/public/photos', [UserCommunityPhotoController::class, 'publicIndex']);
+Route::get('/email/verify/{id}/{hash}', function (Illuminate\Http\Request $request, $id, $hash) {
+    $user = \App\Models\User::findOrFail($id);
+
+    if (!hash_equals(sha1($user->getEmailForVerification()), (string) $hash)) {
+        return response()->json(['message' => 'Invalid verification link'], 403);
+    }
+
+    if (!$user->hasVerifiedEmail()) {
+        $user->markEmailAsVerified();
+        event(new Illuminate\Auth\Events\Verified($user));
+    }
+
+    $frontend = rtrim(config('app.frontend_url'), '/');
+    return redirect()->away($frontend . '/#/verify-email?status=verified');
+})->middleware('signed')->name('verification.verify');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
@@ -40,17 +55,16 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(['message' => 'Verification link sent']);
     })->middleware('throttle:6,1');
 
-    Route::get('/email/verify/{id}/{hash}', function (Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
-        $request->fulfill();
-
-        return response()->json(['message' => 'Email verified']);
-    })->middleware('signed')->name('verification.verify');
-
     Route::middleware('admin')->group(function () {
         Route::get('/admin/ping', function () {
             return response()->json(['message' => 'Admin access confirmed']);
         });
 
+        Route::get('/admin/trips', [TripController::class, 'index']);
+        Route::post('/admin/trips', [TripController::class, 'store']);
+        Route::get('/admin/trips/{trip}', [TripController::class, 'show']);
+        Route::match(['put', 'patch'], '/admin/trips/{trip}', [TripController::class, 'update']);
+        Route::delete('/admin/trips/{trip}', [TripController::class, 'destroy']);
         Route::apiResource('/admin/trips', TripController::class);
         Route::post('/admin/trips/{trip}/media', [TripController::class, 'addMedia']);
         Route::get('/admin/trips/{trip}/media', [TripController::class, 'listMedia']);

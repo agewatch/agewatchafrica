@@ -33,6 +33,16 @@ const emptyTrip = {
   excluded_items_text: ""
 };
 
+function formatDateForInput(value) {
+  if (!value) return "";
+  if (typeof value === "string") {
+    return value.includes("T") ? value.split("T")[0] : value;
+  }
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+}
+
 function parseList(text) {
   if (!text) return [];
   return text
@@ -138,8 +148,8 @@ export default function AdminTrips() {
           title: fullTrip.title || "",
           destination_city: fullTrip.destination_city || "",
           destination_country: fullTrip.destination_country || "",
-          start_date: fullTrip.start_date || "",
-          end_date: fullTrip.end_date || "",
+          start_date: formatDateForInput(fullTrip.start_date),
+          end_date: formatDateForInput(fullTrip.end_date),
           price: fullTrip.price || "",
           capacity: fullTrip.capacity || "",
           status: fullTrip.status || "draft",

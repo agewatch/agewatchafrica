@@ -122,6 +122,24 @@ export async function sendVerificationEmail() {
   return response.json();
 }
 
+export async function verifyEmailLink(verifyUrl) {
+  const token = getToken();
+  const headers = { Accept: "application/json" };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(verifyUrl, {
+    headers
+  });
+
+  if (!response.ok) {
+    throw new Error("Unable to verify email");
+  }
+
+  return response.json();
+}
+
 export function logout() {
   clearToken();
 }

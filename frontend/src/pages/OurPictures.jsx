@@ -124,9 +124,7 @@ export default function OurPictures() {
           <div className="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
               <div>
-                <p className="text-sm text-slate-500">
-                  {activeTab === "gallery" ? "Community Gallery" : "Your Upload"}
-                </p>
+                <p className="text-sm text-slate-500">Community Gallery</p>
                 <h3 className="text-xl font-bold text-slate-900">
                   {activePhoto.title || "Photo"}
                 </h3>
