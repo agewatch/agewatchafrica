@@ -24,6 +24,13 @@ export default function DestinationModal({ destination, isOpen, onClose }) {
               <MapPin className="w-5 h-5 mr-2" />
               <span className="text-lg">{destination.location}</span>
             </div>
+            {/* Coming Soon Badge */}
+            {destination.comingSoon && (
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 border-2 border-blue-300">
+                <span className="text-sm font-bold text-blue-700">🚀 Coming Soon</span>
+                <span className="text-sm text-blue-600">We're working on bringing this destination to you!</span>
+              </div>
+            )}
           </div>
 
           {/* Quick Info */}
@@ -87,9 +94,18 @@ export default function DestinationModal({ destination, isOpen, onClose }) {
 
           {/* CTA Button */}
           <div className="mt-8 flex justify-center">
-            <button className="px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-              Explore Trips to {destination.location}
-            </button>
+            {destination.comingSoon ? (
+              <div className="text-center">
+                <p className="text-amber-700 mb-3">This destination is coming soon! Express your interest below.</p>
+                <button className="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                  Express Interest in {destination.location}
+                </button>
+              </div>
+            ) : (
+              <button className="px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                Explore Trips to {destination.location}
+              </button>
+            )}
           </div>
         </div>
       </div>

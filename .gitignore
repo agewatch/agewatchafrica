@@ -12,3 +12,12 @@ frontend/new_src_extracted/
 .env
 .env.local
 .DS_Store
+
+# IDE settings
+.vscode/
+.idea/
+
+# Deployment artifacts
+deployment/
+*.zip
+*.sql

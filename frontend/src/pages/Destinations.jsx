@@ -57,6 +57,7 @@ Stay in carefully selected lodges that offer accessibility features, medical sup
     name: "Cape Town Heritage",
     location: "South Africa",
     category: "cultural",
+    comingSoon: true,
     image:
       "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXBlJTIwdG93biUyMHZpZXd8ZW58MXx8fHwxNzcwMjM2NzM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
     images: [
@@ -90,6 +91,7 @@ The Cape Winelands await with gentle tastings at historic estates, where you'll 
     name: "Nile River Cruise",
     location: "Egypt",
     category: "cultural",
+    comingSoon: true,
     image:
       "https://images.unsplash.com/photo-1544948503-7ad532e71046?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuaWxlJTIwcml2ZXIlMjBjcnVpc2V8ZW58MXx8fHwxNzcwMjM2NzM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
     images: [
@@ -122,6 +124,7 @@ Explore the temples of Luxor and Karnak, the Valley of the Kings, and the magnif
     name: "Morocco Wellness Retreat",
     location: "Morocco",
     category: "wellness",
+    comingSoon: true,
     image:
       "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3JvY2NvJTIwbWVkaW5hfGVufDF8fHx8MTc3MDIzNjczNHww&ixlib=rb-4.1.0&q=80&w=1080",
     images: [
@@ -155,6 +158,7 @@ Experience Marrakech's famous Jemaa el-Fnaa square at your own pace, explore the
     name: "Ghana Heritage Trail",
     location: "Ghana",
     category: "cultural",
+    comingSoon: true,
     image:
       "https://images.unsplash.com/photo-1582711012124-a56cf82307a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnaGFuYSUyMGNhc3RsZXxlbnwwfHx8fDE3NzAyMzY3MzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
     images: [
@@ -314,7 +318,7 @@ Explore the UNESCO-listed Stone Town, a maze of narrow streets filled with histo
   },
   {
     name: "Amboseli National Park",
-    location: "Tanzania",
+    location: "Kenya",
     category: "safari",
     image:
       "https://images.unsplash.com/photo-1592670130129-4388cdb9d76e?q=80&w=1431&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -322,7 +326,7 @@ Explore the UNESCO-listed Stone Town, a maze of narrow streets filled with histo
       "https://images.unsplash.com/photo-1592670130129-4388cdb9d76e?q=80&w=1431&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1648982156491-992b4b1d1060?q=80&w=1360&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ],
-    description: "Senior tourism destination in Tanzania.",
+    description: "Senior tourism destination in Kenya.",
     detailedDescription: "Amboseli National Park.",
     quickInfo: {
       bestTime: "TBD",
@@ -548,6 +552,12 @@ export default function Destinations() {
                     <span className={`absolute top-4 left-4 px-4 py-2 rounded-full text-sm font-semibold border ${categoryColors[destination.category]}`}>
                       {destination.category.charAt(0).toUpperCase() + destination.category.slice(1)}
                     </span>
+                    {/* Coming Soon Badge */}
+                    {destination.comingSoon && (
+                      <span className="absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg border-2 border-white">
+                        Coming Soon
+                      </span>
+                    )}
                   </div>
                   
                   {/* Content Section */}

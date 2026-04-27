@@ -114,9 +114,9 @@ export default function Consult() {
                 Contact Information
               </h3>
               <div className="space-y-3 text-amber-800">
-                <p>📞 +1 (555) 123-4567</p>
-                <p>✉️ hello@agewatchafrica.com</p>
-                <p>📍 Accra, Ghana | Nairobi, Kenya</p>
+                <p>📞 +254 720 152 141</p>
+                <p>✉️ hello@agewatchafricaconsult.com</p>
+                <p>📍 Nairobi, Kenya</p>
               </div>
             </div>
           </GlassCard>

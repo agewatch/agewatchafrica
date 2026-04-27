@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GlassCard from "../components/GlassCard.jsx";
-import { 
-  Leaf, 
-  Camera, 
-  Palette, 
-  Sun, 
-  Coffee, 
+import {
+  Leaf,
+  Camera,
+  Palette,
+  Sun,
+  Coffee,
   Sunset,
   Moon,
-  Users, 
-  MapPin, 
-  Luggage, 
+  Users,
+  MapPin,
+  Luggage,
   Clock,
   ChevronRight,
   MessageCircle,
   Instagram,
-  Facebook
+  Facebook,
+  Quote
 } from "lucide-react";
 import ImageWithFallback from "../components/figma/ImageWithFallback.jsx";
 import { fetchPublicPhotos } from "../services/photos.js";
@@ -93,8 +94,14 @@ export default function Home() {
     "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400"
   ];
 
-  const displayImages = galleryPhotos.length > 0 
-    ? galleryPhotos.map(p => p.image_url) 
+  const displayImages = galleryPhotos.length > 0
+    ? galleryPhotos.map(p => {
+        // Prepend backend URL if image_url is a relative path
+        if (p.image_url?.startsWith('/')) {
+          return `http://localhost${p.image_url}`;
+        }
+        return p.image_url;
+      })
     : placeholderImages;
 
   return (
@@ -112,10 +119,10 @@ export default function Home() {
         </div>
 
         <div className="relative max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-amber-900 mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-amber-900 mb-6 leading-tight" style={{ textShadow: '2px 2px 4px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.6)' }}>
             Travel Experiences Designed for Seniors
           </h1>
-          <p className="text-xl sm:text-2xl text-amber-800 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl sm:text-2xl text-amber-950 font-bold mb-10 max-w-3xl mx-auto leading-relaxed" style={{ textShadow: '2px 2px 4px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.6)' }}>
             Gentle, meaningful journeys across Kenya with care, comfort, and flexibility.
           </p>
 
@@ -277,21 +284,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== TESTIMONIALS PLACEHOLDER ========== */}
+      {/* ========== TESTIMONIALS ========== */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-bold text-amber-900 mb-4">
             Traveler Stories
           </h2>
+          <p className="text-lg text-amber-800 max-w-2xl mx-auto">
+            Real experiences from travelers who've journeyed with us
+          </p>
         </div>
 
-        <GlassCard hover={false} className="text-center p-12">
-          <p className="text-xl text-amber-800 italic mb-6">
-            "Our first senior guests are arriving soon. We look forward to sharing their stories here."
-          </p>
-          <p className="text-amber-600 font-medium">
-            — The AgeWatchAfrica Team
-          </p>
+        <GlassCard hover={false} className="relative p-12">
+          <Quote className="absolute top-6 left-6 w-12 h-12 text-amber-300/40" />
+          <div className="text-center">
+            <p className="text-xl text-amber-800 italic mb-8 leading-relaxed">
+              "My wife and I traveled to Kenya to participate in an awareness trip with Unbound. Of course, we had to add on a safari adventure. Working with AgeWatchAfrica made it all easy, affordable, and totally customized to our needs. We saw the Big 5 across several parks and preserves. If you are a 'mature' traveler, consider working with AgeWatchAfrica. They make it the right trip for you and one you will never forget."
+            </p>
+            <div className="border-t-2 border-amber-200 pt-6">
+              <p className="text-amber-900 font-bold text-lg">
+                Jim Alvey
+              </p>
+              <p className="text-amber-600 font-medium">
+                Columbia, MD
+              </p>
+            </div>
+          </div>
         </GlassCard>
 
         {/* Social Links */}
@@ -329,7 +347,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="https://wa.me/254700000000"
+              href="https://wa.me/254720152141"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold transition-all shadow-lg hover:shadow-xl"

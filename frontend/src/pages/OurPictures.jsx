@@ -105,10 +105,12 @@ export default function OurPictures() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 hover:opacity-100 transition-all" />
                 </div>
                 <div className="p-5 text-left">
-                  <p className="text-sm text-slate-500">Community</p>
-                  <h3 className="text-lg font-bold text-slate-900">
-                    {photo.title || "Untitled"}
-                  </h3>
+                  <p className="text-sm text-slate-500">Traveler Photo</p>
+                  {photo.title && (
+                    <h3 className="text-lg font-bold text-slate-900">
+                      {photo.title}
+                    </h3>
+                  )}
                   {photo.caption && (
                     <p className="text-sm text-slate-600 mt-1">{photo.caption}</p>
                   )}
@@ -124,10 +126,17 @@ export default function OurPictures() {
           <div className="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
               <div>
-                <p className="text-sm text-slate-500">Community Gallery</p>
-                <h3 className="text-xl font-bold text-slate-900">
-                  {activePhoto.title || "Photo"}
-                </h3>
+                <p className="text-sm text-slate-500">Traveler Photos</p>
+                {activePhoto.caption && (
+                  <h3 className="text-xl font-bold text-slate-900">
+                    {activePhoto.caption}
+                  </h3>
+                )}
+                {!activePhoto.caption && activePhoto.title && (
+                  <h3 className="text-xl font-bold text-slate-900">
+                    {activePhoto.title}
+                  </h3>
+                )}
               </div>
               <button
                 onClick={() => setActiveIndex(null)}

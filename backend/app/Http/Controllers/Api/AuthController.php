@@ -18,7 +18,15 @@ class AuthController extends Controller
         ]);
 
         $user = \App\Models\User::create($data);
-        $user->sendEmailVerificationNotification();
+        
+        // Try to send verification email, but don't fail registration if mail isn't configured
+        try {
+            $user->sendEmailVerificationNotification();
+        } catch (\Exception $e) {
+            // Log the error but continue with registration
+            \Log::warning('Failed to send verification email: ' . $e->getMessage());
+        }
+        
         $token = $user->createToken('agewatchafrica')->plainTextToken;
 
         return response()->json([

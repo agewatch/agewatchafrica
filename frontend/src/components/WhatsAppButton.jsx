@@ -1,6 +1,6 @@
 import { MessageCircle } from "lucide-react";
 
-const WHATSAPP_NUMBER = "+254700000000"; // Kenya placeholder - replace with actual number
+const WHATSAPP_NUMBER = "+254720152141"; // Official AgeWatchAfrica contact number
 const DEFAULT_MESSAGE = "Hello! I'm interested in learning more about AgeWatchAfrica travel experiences for seniors.";
 
 export default function WhatsAppButton() {
